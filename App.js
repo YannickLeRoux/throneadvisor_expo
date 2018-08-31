@@ -8,7 +8,7 @@ import AuthScreen from './src/screens/AuthScreen';
 import UserDetailsScreen from './src/screens/UserDetailsScreen';
 import MapScreen from './src/screens/MapScreen';
 import SavedThronesScreen from './src/screens/SavedThronesScreen';
-import RatingScreen from './src/screens/RatingScreen';
+import ThroneDetailsScreen from './src/screens/ThroneDetailsScreen';
 
 
 
@@ -24,7 +24,7 @@ class App extends React.Component {
           map: { screen:
             createStackNavigator({
               mainMap: { screen: MapScreen },
-              rating: { screen: RatingScreen }
+              details: { screen: ThroneDetailsScreen }
             })
           },
           user: { screen: UserDetailsScreen },
