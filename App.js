@@ -26,6 +26,19 @@ class App extends React.Component {
         messagingSenderId: process.env.MESSAGING_SENDER_ID
       }
     );
+    // create a new bathroom
+    firebase.database().ref().child('thrones').push().set({
+      name: 'Starbucks',
+      description: 'public bathroom',
+      latitude: 37,
+      longitude: -122
+    })
+    .then( () => console.log('inserted!'))
+    .catch( error => console.error(error));
+
+    // fetch all bathrooms
+    firebase.database().ref('thrones').on('value', data => console.log(data.toJSON()));
+
   }
 
   render() {

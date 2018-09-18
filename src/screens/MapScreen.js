@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
 import { View, Platform, ActivityIndicator } from 'react-native';
-import { MapView } from 'expo';
-import {Button, Text } from 'native-base';
+import { connect } from 'react-redux';
+import { MapView, Marker } from 'expo';
+import {Button, Text, Icon } from 'native-base';
 
-export default class MapScreen extends Component {
+import MarkersList from '../components/MarkersList';
+
+import { fetchThrones } from '../actions';
+
+class MapScreen extends Component {
 
 
   static navigationOptions = ({ navigation }) => {
@@ -27,8 +32,8 @@ export default class MapScreen extends Component {
   state = {
     mapLoaded: false,
     region: {
-      longitude: -122,
       latitude: 37,
+      longitude: -122,
       longitudeDelta: 0.04,
       latitudeDelta: 0.09
     }
@@ -40,6 +45,10 @@ export default class MapScreen extends Component {
 
   onRegionChangeComplete = (region) => {
     this.setState({ region });
+  }
+
+  onButtonPress = () => {
+    this.props.fetchThrones(this.state.region);
   }
 
   render() {
@@ -56,8 +65,31 @@ export default class MapScreen extends Component {
           onRegionChangeComplete={this.onRegionChangeComplete}
           region={this.state.region}
           style={{ flex: 1}}
-        />
+        >
+        <MarkersList />
+        </MapView>
+
+        <View style={ styles.buttonContainer}>
+          <Button
+            large
+            style={{backgroundColor:'#009688'}}
+            onPress={this.onButtonPress}>
+            <Icon name='search' />
+            <Text>
+              Search This Area
+            </Text>
+          </Button>
+        </View>
       </View>
     )
   }
 }
+
+const styles = {
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center'
+  }
+}
+export default connect(null, {fetchThrones})(MapScreen);
