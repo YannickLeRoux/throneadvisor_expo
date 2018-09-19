@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Platform, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { MapView, Marker } from 'expo';
+import { MapView } from 'expo';
 import {Button, Text, Icon } from 'native-base';
 
 import { fetchThrones } from '../actions';
@@ -14,7 +14,7 @@ class MapScreen extends Component {
       title: 'Find a Throne',
       headerRight: (
         <Button
-        onPress={() => navigation.navigate('rating')}
+        onPress={() => navigation.navigate('details')}
         transparent
         ><Text>
         Rate it!
@@ -28,7 +28,6 @@ class MapScreen extends Component {
   }
 
   state = {
-    markers: [],
     mapLoaded: false,
     region: {
       latitude: 37,
@@ -73,9 +72,10 @@ class MapScreen extends Component {
               title={marker.name}
               description={marker.description}
               coordinate= {{ latitude: marker.latitude, longitude: marker.longitude }}
+              image={require('../../assets/throne.png')}
+              onPress={() => navigation.navigate('rating')}
           />
-          )
-          )}
+    ))}
         </MapView>
 
         <View style={ styles.buttonContainer}>
