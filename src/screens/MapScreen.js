@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { MapView, Marker } from 'expo';
 import {Button, Text, Icon } from 'native-base';
 
-import MarkersList from '../components/MarkersList';
-
 import { fetchThrones } from '../actions';
 
 class MapScreen extends Component {
@@ -30,6 +28,7 @@ class MapScreen extends Component {
   }
 
   state = {
+    markers: [],
     mapLoaded: false,
     region: {
       latitude: 37,
@@ -40,7 +39,9 @@ class MapScreen extends Component {
   }
 
   componentDidMount() {
-    this.setState({ mapLoaded: true })
+    this.setState({ mapLoaded: true });
+    // fetch throne list
+    this.props.fetchThrones();
   }
 
   onRegionChangeComplete = (region) => {
@@ -62,11 +63,19 @@ class MapScreen extends Component {
     return (
       <View style={{ flex: 1}}>
         <MapView
-          onRegionChangeComplete={this.onRegionChangeComplete}
+          onRegionChangeCompete={this.onRegionChangeComplete}
           region={this.state.region}
           style={{ flex: 1}}
-        >
-        <MarkersList />
+          >
+
+        {this.props.thrones.length && this.props.thrones.map( marker => (
+          <MapView.Marker
+              title={marker.name}
+              description={marker.description}
+              coordinate= {{ latitude: marker.latitude, longitude: marker.longitude }}
+          />
+          )
+          )}
         </MapView>
 
         <View style={ styles.buttonContainer}>
@@ -92,4 +101,9 @@ const styles = {
     alignSelf: 'center'
   }
 }
-export default connect(null, {fetchThrones})(MapScreen);
+
+const mapStateToProps = ({ thrones }) => {
+  return { thrones };
+
+};
+export default connect(mapStateToProps, {fetchThrones})(MapScreen);

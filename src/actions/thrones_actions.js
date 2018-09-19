@@ -1,34 +1,13 @@
-import axios from 'axios';
 import reverseGeocode from 'latlng-to-zip';
-import qs from 'qs';
+import firebase from 'firebase';
 
 import { FETCH_THRONES } from './types';
 
-const JOB_ROOT_URL = 'http://api.indeed.com/ads/apisearch?';
-const JOB_QUERY_PARAMS = {
-  publisher: '4201738803816157',
-  format: 'json',
-  v: '2',
-  latlong: 1,
-  radius: 10,
-  q: 'javascript'
-};
 
-const buildJobsUrl = (zip) => {
-  const query = qs.stringify({ ...JOB_QUERY_PARAMS, l: zip });
-  return `${JOB_ROOT_URL}${query}`;
-};
-
-
-export const fetchThrones = (region) => async (dispatch) => {
-  try {
-    let zip = await reverseGeocode(region);
-    const url = buildJobsUrl(zip);
-    let { data } = await axios.get(url);
-    dispatch({ type: FETCH_THRONES, payload: data})
-  } catch(e) {
-    console.error(e);
-
-  }
-
+// passer la region en argument
+export const fetchThrones = () => async (dispatch) => {
+  firebase.database().ref('thrones').on('value', snapshot => {
+    dispatch({ type: FETCH_THRONES, payload: [snapshot.val()] });
+    console.log('action', snapshot.val() )
+  });
   }
